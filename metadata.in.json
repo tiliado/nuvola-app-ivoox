@@ -2,6 +2,7 @@
   "id": "ivoox",
   "name": "Ivoox",
   "home_url": "https://us.ivoox.com/en/audios_sa_f_1.html",
+  "allowed_uri": "^https://(\\w+\\.ivoox\\.com)(/.*)?$",
   "maintainer_name": "Jiří Janoušek",
   "maintainer_link": "https://github.com/fenryxo",
   "version_major": 1,
