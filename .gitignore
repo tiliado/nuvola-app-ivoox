@@ -1,0 +1,13 @@
+Makefile
+metadata.json
+icons
+/screenshots/
+nuvola-app-ivoox
+eu.tiliado.NuvolaAppIvoox.desktop
+eu.tiliado.NuvolaAppIvoox.service
+eu.tiliado.NuvolaAppIvoox.appdata.xml
+nuvola-app-ivoox.metainfo.xml
+eu.tiliado.WebRuntimeAppIvoox.desktop
+eu.tiliado.WebRuntimeAppIvoox.service
+eu.tiliado.WebRuntimeAppIvoox.appdata.xml
+nuvola-app-ivoox.metainfo.xml
