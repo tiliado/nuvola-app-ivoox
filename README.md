@@ -1,5 +1,5 @@
 Ivoox • Nuvola Apps Runtime [![CircleCI](https://circleci.com/gh/tiliado/nuvola-app-ivoox/tree/master.svg?style=svg)](https://circleci.com/gh/tiliado/nuvola-app-ivoox/tree/master)
-=================================
+===========================
 
 Integration of Ivoox into your linux desktop via
 [Nuvola Apps Runtime](https://github.com/tiliado/nuvolaruntime).
@@ -7,7 +7,9 @@ Integration of Ivoox into your linux desktop via
 Support
 -------
 
-Follow [Bug reporting guidelines](https://github.com/tiliado/nuvolaruntime/wiki/Bug-Reporting-Guidelines).
+  - Use [Nuvola Runtime issue tracker](https://github.com/tiliado/nuvolaruntime/issues/new/choose)
+    to report bugs, ask questions or suggest features.
+  - Follow [Bug reporting guidelines](https://github.com/tiliado/nuvolaruntime/wiki/Bug-Reporting-Guidelines).
 
 Installation
 ------------
