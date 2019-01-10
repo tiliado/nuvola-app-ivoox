@@ -25,17 +25,12 @@
 'use strict';
 
 (function (Nuvola) {
-  // Create media player component
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-
-  // Handy aliases
   var PlaybackState = Nuvola.PlaybackState
   var PlayerAction = Nuvola.PlayerAction
+  var player = Nuvola.$object(Nuvola.MediaPlayer)
 
-  // Create new WebApp prototype
   var WebApp = Nuvola.$WebApp()
 
-  // Initialization routines
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
@@ -47,38 +42,83 @@
     }
   }
 
-  // Page is ready for magic
   WebApp._onPageReady = function () {
-    // Connect handler for signal ActionActivated
     Nuvola.actions.connect('ActionActivated', this)
-
-    // Start update routine
     this.update()
   }
 
-  // Extract data from the web page
   WebApp.update = function () {
+    var elms = this._getElements()
     var track = {
-      title: null,
+      title: Nuvola.queryText('#main .top-header .title h1'),
       artist: null,
       album: null,
-      artLocation: null,
-      rating: null
+      artLocation: Nuvola.queryAttribute('#main img.main', 'src'),
+      rating: null,
+      length: elms.timeTotal
     }
 
-    player.setTrack(track)
-    player.setPlaybackState(PlaybackState.UNKNOWN)
+    var state
+    if (elms.pause) {
+      state = PlaybackState.PLAYING
+    } else if (elms.play) {
+      state = PlaybackState.PAUSED
+    } else {
+      state = PlaybackState.UNKNOWN
+    }
 
-    // Schedule the next update
+    player.setPlaybackState(state)
+    player.setTrack(track)
+    player.setCanGoPrev(false)
+    player.setCanGoNext(false)
+    player.setCanPlay(!!elms.play)
+    player.setCanPause(!!elms.pause)
+    player.setTrackPosition(elms.timeElapsed)
+    player.setCanSeek(state !== PlaybackState.UNKNOWN && elms.seekBar)
+
     setTimeout(this.update.bind(this), 500)
   }
 
-  // Handler of playback actions
   WebApp._onActionActivated = function (emitter, name, param) {
+    var elms = this._getElements()
     switch (name) {
-      case PlayerAction.Play:
+      case PlayerAction.TOGGLE_PLAY:
+        if (elms.play) {
+          Nuvola.clickOnElement(elms.play)
+        } else {
+          Nuvola.clickOnElement(elms.pause)
+        }
+        break
+      case PlayerAction.PLAY:
+        Nuvola.clickOnElement(elms.play)
+        break
+      case PlayerAction.PAUSE:
+      case PlayerAction.STOP:
+        Nuvola.clickOnElement(elms.pause)
+        break
+      case PlayerAction.SEEK:
+        var total = Nuvola.parseTimeUsec(elms.timeTotal)
+        if (param > 0 && param <= total) {
+          Nuvola.clickOnElement(elms.seekBar, param / total, 0.5)
+        }
         break
     }
+  }
+
+  WebApp._getElements = function () {
+    var elms = {
+      play: document.querySelector('.button .play > a'),
+      pause: document.querySelector('.button .stop > a'),
+      timeElapsed: Nuvola.queryText('.player-timebar .time'),
+      timeTotal: Nuvola.queryText('.player-timebar .total-time'),
+      seekBar: document.querySelector('.player-timebar .buffer-timebar')
+    }
+    for (var key of ['play', 'pause']) {
+      if (elms[key] && elms[key].parentElement.style.display === 'none') {
+        elms[key] = null
+      }
+    }
+    return elms
   }
 
   WebApp.start()
