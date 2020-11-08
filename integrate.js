@@ -25,16 +25,16 @@
 'use strict';
 
 (function (Nuvola) {
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
 
-  var WebApp = Nuvola.$WebApp()
+  const WebApp = Nuvola.$WebApp()
 
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -48,8 +48,8 @@
   }
 
   WebApp.update = function () {
-    var elms = this._getElements()
-    var track = {
+    const elms = this._getElements()
+    const track = {
       title: Nuvola.queryText('#main .top-header .title h1'),
       artist: null,
       album: null,
@@ -58,7 +58,7 @@
       length: elms.timeTotal
     }
 
-    var state
+    let state
     if (elms.pause) {
       state = PlaybackState.PLAYING
     } else if (elms.play) {
@@ -80,7 +80,7 @@
   }
 
   WebApp._onActionActivated = function (emitter, name, param) {
-    var elms = this._getElements()
+    const elms = this._getElements()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
         if (elms.play) {
@@ -96,24 +96,25 @@
       case PlayerAction.STOP:
         Nuvola.clickOnElement(elms.pause)
         break
-      case PlayerAction.SEEK:
-        var total = Nuvola.parseTimeUsec(elms.timeTotal)
+      case PlayerAction.SEEK: {
+        const total = Nuvola.parseTimeUsec(elms.timeTotal)
         if (param > 0 && param <= total) {
           Nuvola.clickOnElement(elms.seekBar, param / total, 0.5)
         }
         break
+      }
     }
   }
 
   WebApp._getElements = function () {
-    var elms = {
+    const elms = {
       play: document.querySelector('.button .play > a'),
       pause: document.querySelector('.button .stop > a'),
       timeElapsed: Nuvola.queryText('.player-timebar .time'),
       timeTotal: Nuvola.queryText('.player-timebar .total-time'),
       seekBar: document.querySelector('.player-timebar .buffer-timebar')
     }
-    for (var key of ['play', 'pause']) {
+    for (const key of ['play', 'pause']) {
       if (elms[key] && elms[key].parentElement.style.display === 'none') {
         elms[key] = null
       }
